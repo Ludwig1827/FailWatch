@@ -30,7 +30,7 @@ When AI agents have access to production tools (databases, payment APIs, email),
 Hard blocks on numeric limits, regex patterns, and business rules. No LLM guessing involved.
 ```python
 policy = {
-    "max_amount": 1000,
+    "limit": 1000,
     "allowed_accounts": ["checking", "savings"],
     "forbidden_keywords": ["delete_all", "drop_table"]
 }
@@ -117,15 +117,15 @@ from failwatch import FailWatchSDK
 
 # Initialize SDK
 fw = FailWatchSDK(
-    server_url="http://localhost:8000",
-    default_fail_mode="closed"  # Fail-safe default
+    api_url="http://localhost:8000",   
+    default_fail_mode="closed"
 )
 
 @fw.guard(
-    input_arg="user_request",      # Agent's intent
-    output_arg="tool_args",         # Parsed parameters
-    policy={                        # Your safety rules
-        "max_amount": 1000,
+    input_arg="user_request",
+    output_arg="tool_args",
+    policy={
+        "limit": 1000,                 
         "require_approval_above": 500
     }
 )
@@ -145,7 +145,7 @@ Define complex business logic:
 ```python
 policy = {
     # Hard limits (deterministic)
-    "max_amount": 1000,
+    "limit": 1000,
     "max_daily_total": 5000,
     
     # Pattern matching

@@ -25,3 +25,8 @@ server/failwatch.db
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Packaging artifacts
+dist/
+build/
+*.egg-info/

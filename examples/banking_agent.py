@@ -3,7 +3,7 @@ import os
 import sys
 import uuid
 
-from sdk import (
+from failwatch import (
     FailWatchBlocked,
     FailWatchConnectionError,
     FailWatchRejected,

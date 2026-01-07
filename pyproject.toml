@@ -1,0 +1,34 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "failwatch"  # 
+version = "0.1.0"
+description = "The Missing Safety Layer for AI Agents"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+authors = [
+  { name = "Your Name", email = "your.email@example.com" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "requests",
+    "pydantic",
+    "fastapi", 
+    "python-dotenv",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Ludwig1827/FailWatch"
+"Bug Tracker" = "https://github.com/Ludwig1827/FailWatch/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["failwatch"]  

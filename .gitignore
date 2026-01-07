@@ -1,0 +1,27 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+# Based on your explorer view showing 'venv' folder
+venv/
+env/
+.venv/
+
+# Environment Variables (Secrets)
+# You have a .env file which likely contains your OpenAI key
+.env
+
+# Database
+# You have a local SQLite DB in 'server/failwatch.db'
+*.db
+*.sqlite3
+server/failwatch.db
+
+# IDE Settings (VS Code)
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db

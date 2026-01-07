@@ -54,11 +54,16 @@ Deterministic checks run in microseconds. LLM checks (when needed) complete in <
 
 ### 1️⃣ Installation
 
-Clone the repository and install dependencies:
+Install the SDK via pip:
+```bash
+pip install failwatch
+```
+
+To run the server locally (required), clone the repo:
 ```bash
 git clone https://github.com/Ludwig1827/FailWatch.git
-cd FailWatch
-pip install -r requirements.txt
+cd FailWatch/server
+pip install -r ../requirements.txt
 ```
 
 ### 2️⃣ Start the Guard Server
@@ -108,7 +113,7 @@ The demo runs three scenarios:
 
 Wrap your sensitive functions with the `@guard` decorator:
 ```python
-from sdk import FailWatchSDK
+from failwatch import FailWatchSDK
 
 # Initialize SDK
 fw = FailWatchSDK(
@@ -147,30 +152,22 @@ policy = {
     "allowed_account_pattern": r"^[A-Z]{2}\d{8}$",
     "forbidden_keywords": ["admin", "root", "sudo"],
     
-    # Contextual rules
+    # Contextual rules (evaluated by LLM judge)
     "require_manager_approval_if": {
         "amount_above": 500,
         "account_type": "external",
         "time_after": "18:00"
     }
 }
-```
 
-### Handling Decisions
-```python
-# Check the guard's decision
-result = fw.check_action(
-    user_request="Please refund $1500",
-    tool_args={"amount": 1500, "account": "external"},
+@fw.guard(
+    input_arg="user_request",
+    output_arg="tool_args",
     policy=policy
 )
-
-if result["decision"] == "approved":
-    execute_refund()
-elif result["decision"] == "blocked":
-    log_security_event(result["reason"])
-elif result["decision"] == "review":
-    notify_manager(result["review_url"])
+def process_transaction(user_request: str, tool_args: dict):
+    # Your transaction logic here
+    pass
 ```
 
 ---
@@ -207,7 +204,7 @@ elif result["decision"] == "review":
 
 - **SDK** (`sdk/`): Lightweight Python client with fail-safe defaults
 - **Server** (`server/`): FastAPI engine for policy evaluation
-- **Dashboard**: Trace visualization at `http://localhost:8000/dashboard`
+- **Dashboard**: Trace visualization at `http://localhost:8000/`
 - **Examples** (`examples/`): Demo agents for banking, e-commerce, ops
 
 ---
@@ -233,36 +230,6 @@ elif result["decision"] == "review":
 - Enforce HIPAA compliance on data access
 - Require attestation before PHI disclosure
 - Block unauthorized prescription modifications
-
----
-
-## 🔧 Configuration
-
-Create a `config.yaml` in your project root:
-```yaml
-failwatch:
-  server_url: "http://localhost:8000"
-  timeout: 5  # seconds
-  default_fail_mode: "closed"  # or "open"
-  
-  retry:
-    enabled: true
-    max_attempts: 3
-    backoff_multiplier: 2
-    
-  logging:
-    level: "INFO"
-    destination: "failwatch.log"
-    
-  human_review:
-    slack_webhook: "https://hooks.slack.com/..."
-    approval_timeout: 300  # 5 minutes
-```
-
-Load it in your code:
-```python
-fw = FailWatchSDK.from_config("config.yaml")
-```
 
 ---
 
@@ -340,10 +307,14 @@ curl https://api.openai.com/v1/models \
   -H "Authorization: Bearer $OPENAI_API_KEY"
 ```
 
-### Timeout errors
+### Import errors
 ```python
-# Increase timeout in SDK
-fw = FailWatchSDK(timeout=10)  # seconds
+# If you get "ModuleNotFoundError: No module named 'failwatch'"
+# Make sure you installed via pip:
+pip install failwatch
+
+# If running examples from source, use:
+from sdk import FailWatchSDK
 ```
 
 ---
@@ -365,9 +336,7 @@ Built with:
 
 ## 📞 Support
 
-- 📧 Email: support@failwatch.dev
-- 💬 Discord: [Join our community](https://discord.gg/failwatch)
-- 🐦 Twitter: [@failwatch](https://twitter.com/failwatch)
+- 📧 Email: beeth.xue@gmail.com
 - 📝 Issues: [GitHub Issues](https://github.com/Ludwig1827/FailWatch/issues)
 
 ---
@@ -376,6 +345,6 @@ Built with:
 
 **Built with ❤️ for the AI safety community**
 
-[⭐ Star us on GitHub](https://github.com/Ludwig1827/FailWatch) • [📖 Documentation](https://docs.failwatch.dev) • [🚀 Get Started](#-quick-start)
+[⭐ Star us on GitHub](https://github.com/Ludwig1827/FailWatch) • [🚀 Get Started](#-quick-start)
 
 </div>
